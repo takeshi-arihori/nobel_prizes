@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="nobel.prizes" content="nobel prizes winner" />
+  <script type="text/javascript" src="nobels.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <title>Nobels Prizes Winner</title>
+
+
+  <!-- Java script -->
+  <script>
+    //  カラムを作成
+    const column = ["year", "category", "id", "laureates", "motivation"];
+
+    // 即時関数でnobel.prizesのlistを必要な要素のみにalignment
+    let result = (function () {
+      let arr = [];
+      for(const el of nobels.prizes){
+        for(const key in el){
+          if(key == "laureates"){
+            const winnerDetails = el[key].map(el => {
+              return {id: el.id, laureates: el.firstname + el.surname, motivation: el.motivation}
+            });
+            for(const obj of winnerDetails){
+              obj.year = el.year;
+              obj.category = el.category;
+              if(obj.motivation == undefined) {
+                obj.motivation = "N/A";
+              }
+              arr.push(obj);
+            }
+          }
+        }
+      }
+      return arr;
+    })();
+
+
+
+    //  欲しい情報を取得し、objectで一纏めに。全てのobjectを配列に格納
+
+    function start() {
+        // body への参照を取得します
+        let mybody = document.getElementsByTagName("body")[0];
+
+        // <table> と <tbody> 要素を生成します
+        mytable = document.createElement("table");
+        mytablehead = document.createElement("thead");
+        mytablebody = document.createElement("tbody");
+
+
+        // カラムの生成
+        for(let k = 0; k < 1; k++){
+          tr = document.createElement("tr");
+          for(let l = 0; l < column.length; l++){
+            th = document.createElement("th");
+            column_text = document.createTextNode(column[l]);
+
+            th.appendChild(column_text);
+            tr.appendChild(th);
+          }
+          mytablehead.appendChild(tr);
+        }
+        mytable.appendChild(mytablehead);
+
+
+        // 残りのすべてのセルを生成
+        for(let j = 0; j < nobels.prizes.length; j++) {
+            // <tr> 要素を生成
+            mycurrent_row = document.createElement("tr");
+
+            for(let i = 0; i < 5; i++) {
+              // <td> 要素を生成
+                mycurrent_cell = document.createElement("td");
+                // テキストノードを生成
+                  currenttext = document.createTextNode(result[j][column[i]]);
+                  // 生成したテキストノードを <td> セルへと付加
+                  mycurrent_cell.appendChild(currenttext);
+                  mycurrent_row.appendChild(mycurrent_cell);
+
+                    // その <td> セルを <tr> 行へと付加
+              }
+            // その <tr> 行を <tbody> へと付加
+            mytablebody.appendChild(mycurrent_row);
+        }
+
+        // <tbody> を <table> へと付加
+        mytable.appendChild(mytablebody);
+        // <table> を <body> へと付加
+        mybody.appendChild(mytable);
+        // mytable の border 属性を 2 に設定
+        mytable.setAttribute("border","2");
+      }
+
+
+  </script>
+  </head>
+
+
+  <body onload="start()">
+    <header>
+      <div>
+        <h1>Nobels Prizes Winner</h1>
+        <h2>Details of Nobel laureates from 1963 to 2018</h2>
+      </div>
+      <p><img src="img/Nobel.Prize.jpeg" alt="Nobels_Prizes_Winner" width="300" height="300"></p>
+    </header>
+    <hr>
+
+    <main>
+      <p>I used the DOM to tabulate an array of objects containing data about Nobel laureates.</p>
+        <label for="list-search">&lt; Search the list &gt;</label>
+        <input type="search" id="list-search" name="q">
+        <button>Search</button>
+    </main>
+
+  </body>
+</html>
